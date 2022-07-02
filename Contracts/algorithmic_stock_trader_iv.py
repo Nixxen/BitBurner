@@ -18,7 +18,8 @@
 #
 # If no profit can be made, then the answer should be 0.
 
-# TODO: Implement the algorithm
+# TODO: Too naive approach for transactions cutoff. Need to scan the list
+#       and find the best possible profit, without resetting.
 
 
 def main():
@@ -31,8 +32,55 @@ def main():
         print("Test passed")
     else:
         stock_prices = [
-            7,
-            [55, 155, 154, 180, 32, 5, 147, 85, 167, 120, 141, 25, 84, 130],
+            3,
+            [
+                140,
+                76,
+                143,
+                105,
+                27,
+                35,
+                124,
+                168,
+                28,
+                150,
+                11,
+                53,
+                146,
+                57,
+                12,
+                49,
+                33,
+                70,
+                184,
+                131,
+                97,
+                28,
+                144,
+                39,
+                116,
+                187,
+                161,
+                75,
+                166,
+                178,
+                162,
+                139,
+                14,
+                192,
+                60,
+                177,
+                63,
+                10,
+                64,
+                61,
+                198,
+                189,
+                25,
+                85,
+                177,
+                44,
+            ],
         ]
         result = get_max_profit(stock_prices[1], stock_prices[0])
         print(result)
