@@ -16,14 +16,12 @@
 #
 # If it's impossible to reach the end, then the answer should be 0.
 
-# TODO: Implement the algorithm
-
 
 from collections import defaultdict, deque
 from typing import Callable
 
 
-DEBUGGING = True
+DEBUGGING = False
 
 
 def debug(*args, func: Callable = None) -> None:
@@ -39,7 +37,7 @@ def debug(*args, func: Callable = None) -> None:
 
 
 def main():
-    testing = True
+    testing = False
     if testing:
         arrays = [
             [2, 0, 0, 0],
@@ -77,7 +75,8 @@ def main():
 
 
 def minimum_jumps(array: list) -> int:
-    """Find the minimum number of jumps to reach the end of the array, using DFS.
+    """Find the minimum number of jumps to reach the end of the array, using
+    a bastardized DFS.
     Args:
         array (list): Array of integers
     Returns:
@@ -102,17 +101,27 @@ def minimum_jumps(array: list) -> int:
             )
             shortest_path_length = min(shortest_path_length, current_path_length)
             continue
+        next_potentials = []
         for i in range(
             current_position + 1, current_position + array[current_position] + 1
         ):
             debug(f"\tChecking position {i}")
             if i >= len(array):
-                continue
+                break
             if not visited[i]:
-                debug(f"\t\tAdding position {i} to stack")
-                stack.append(i)
-                visited[i] = True
-                current_path_length += 1
+                next_potentials.append((i, array[i]))
+        best_potential = current_position
+        best_next_position = 0
+        for next_position, next_value in next_potentials:
+            if next_value + next_position > best_potential:
+                best_potential = next_value + next_position
+                best_next_position = next_position
+        if best_next_position == current_position:
+            debug("\tNo valid next positions")
+            continue
+        stack.append(best_next_position)
+        visited[best_next_position] = True
+        current_path_length += 1
     return shortest_path_length if shortest_path_length != float("inf") else 0
 
 
