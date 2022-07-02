@@ -32,11 +32,11 @@
 #     5aaabb450723abb  ->  aaabbaaababababaabb
 
 
-from time import sleep
+# TODO: Not working on main input string, works on testing input.
 
 
 def main():
-    testing = False
+    testing = True
     if testing:
         input_pairs = [
             ("5aaabb", "aaabb"),
