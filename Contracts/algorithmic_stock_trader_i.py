@@ -14,7 +14,7 @@
 # before you can sell it
 
 
-def max_profit(prices: list) -> int:
+def get_max_profit(prices: list) -> int:
     """
     Args:
         prices (list): List of stock prices
@@ -35,7 +35,7 @@ def max_profit(prices: list) -> int:
 
 def main():
     prices = [182, 60, 90, 109, 28, 39, 186, 70, 68, 122, 18, 177, 34, 173, 147, 6]
-    result = max_profit(prices)
+    result = get_max_profit(prices)
     print(result)
 
 

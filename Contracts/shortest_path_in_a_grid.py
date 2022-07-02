@@ -258,7 +258,7 @@ def get_shortest_path_blocking(
             )  # 1 is the cost of moving to next position
             debug(f"New cost: {new_cost}")
             if new_cost < current_cost[next_position]:
-                debug(f"New cost is less than current cost")
+                debug("New cost is less than current cost")
                 current_cost[next_position] = new_cost
                 full_cost[next_position] = new_cost + get_heuristic(
                     next_position, goal_position
