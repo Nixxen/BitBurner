@@ -33,6 +33,7 @@
 
 
 # TODO: Not working on main input string, works on testing input.
+#   - I completely misunderstood the problem...
 
 
 def main():
@@ -44,6 +45,10 @@ def main():
             ("5aaabb450", "aaabbaaab"),
             ("5aaabb45072", "aaabbaaababababa"),
             ("5aaabb450723abb", "aaabbaaababababaabb"),
+            (
+                "9F78CK6MPo09ZqJUaQnpt041kkc176YCA8Q3770651l940434WTlD4967TkklQ",
+                "F78CK6MPoZqJUaQnpt1kkcnYCA8Q3nYCA8Q3CA8Q3ClQ3ClQ3ClQClQCWTlDQClQ7TkklQ",
+            ),
         ]
         for input_pair in input_pairs:
             input_string = input_pair[0]
@@ -52,14 +57,22 @@ def main():
             print(f"Input: {input_string}")
             print(f"Expected output: {expected_output}")
             print(f"Actual output: {actual_output}")
-            assert actual_output == expected_output
+            assert (
+                actual_output == expected_output
+            ), "Output does not match expected output"
             print()
     else:
         input_string = "9F78CK6MPo09ZqJUaQnpt041kkc176YCA8Q3770651l940434WTlD4967TkklQ"
         print(f"Decompressed string: {decompress(input_string)}")
 
 
-def decompress(input_string):
+def decompress(input_string: str) -> str:
+    """Decompress a LZ-encoded string
+    Args:
+        input_string (str): LZ-encoded string
+    Returns:
+        str: Decompressed string
+    """
     output_string = ""
     given_length = int(input_string[0])
     if given_length == 0:
