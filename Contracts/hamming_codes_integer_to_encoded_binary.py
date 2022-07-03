@@ -20,3 +20,58 @@
 # encoded as it is
 
 # TODO: Implement the Hamming-Code
+
+from operator import xor
+from functools import reduce
+
+
+def main():
+    testing = False
+    if testing:
+        # fmt: off
+        values = [
+            8,
+            21,
+        ]
+        answers = [
+            '11110000',
+            '1001101011',
+        ]
+        # fmt: on
+        for value, answer in zip(values, answers):
+            result = encode_hamming_code(value)
+            print(f"Tested value {value}")
+            print(f"Expected result: {answer}")
+            print(f"Got result: {result}")
+            assert result == answer, f"Expected {answer}, got {result}"
+            print("Test passed")
+            print("")
+    else:
+        value = 1056111410136
+        result = encode_hamming_code(value)
+        print(result)
+
+
+def encode_hamming_code(value: int) -> str:
+    """Encodes the given value as a Hamming-Code
+    Args:
+        value(int): The value to encode
+    Returns:
+        (str) The encoded value as a binary string
+    """
+    # Parity check for decoding from 3b1b:
+    # reduce(xor, [i for i, bit in enumerate(bin(value)[2:]) if bit == "1"])
+    # This is not what we are doing though... We are trying to encode the value
+
+    # Convert the value to binary
+    binary_value = bin(value)[2:]
+    # Get the length of the binary value
+    length = len(binary_value)
+    # Get the square size
+    square_size = length**2
+    # Get the number of parity bits
+    parity_bits = square_size // length
+
+
+if __name__ == "__main__":
+    main()
