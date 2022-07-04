@@ -21,6 +21,7 @@
 
 # TODO: Implement the Hamming-Code
 
+import math
 from operator import xor
 from functools import reduce
 
@@ -69,8 +70,27 @@ def encode_hamming_code(value: int) -> str:
     length = len(binary_value)
     # Get the square size
     square_size = length**2
-    # Get the number of parity bits
-    parity_bits = square_size // length
+    # Get the number of parity bits (not including overall bit)
+    parity_bits = get_total_parity_bits(length)
+
+
+def get_total_parity_bits(length: int) -> int:
+    """Calculates the total number of parity bits for the given length
+    Args:
+        length(int): The length of the binary value
+    Returns:
+        (int) The total number of parity bits
+    """
+    if length == 0:
+        return 0
+    elif length < 3:
+        return length + 1
+    elif math.ceil(math.log2(length * 2)) <= math.ceil(
+        math.log2(1 + length + math.ceil(math.log2(length)))
+    ):
+        return math.ceil(math.log2(length) + 1)
+    else:
+        return math.ceil(math.log2(length))
 
 
 if __name__ == "__main__":
