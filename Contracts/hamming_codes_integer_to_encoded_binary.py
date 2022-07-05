@@ -24,10 +24,26 @@
 import math
 from operator import xor
 from functools import reduce
+from typing import Callable
+
+
+DEBUGGING = True
+
+
+def debug(*args, func: Callable = None) -> None:
+    """Prints a message if debugging is enabled
+    Args:
+        message (str): Message to print
+    """
+    if DEBUGGING:
+        if func:
+            func(*args)
+        else:
+            print(*args)
 
 
 def main():
-    testing = False
+    testing = True
     if testing:
         # fmt: off
         values = [
@@ -53,6 +69,81 @@ def main():
         print(result)
 
 
+def inject_parity_bits(binary_value: str, parity_bits: int) -> str:
+    """Injects parity_bits amount of blank parity bits into the binary value
+        at every power of 2
+    Args:
+        binary_value(str): The binary value to inject the parity bits into
+        parity_bits(int): The number of empty parity bits to inject
+    Returns:
+        (str) The binary value with the injected parity bits
+    """
+    output = "00"  # Injecting two blank bits at the start
+    offset = len(output)  # For finding the correct index in the normal binary value
+    length = len(binary_value)
+    print(str(binary_value))
+    for i in range(2, length + parity_bits + 1):
+        if math.log2(i).is_integer():
+            debug(f"Parity bit at index {i}")
+            output += "0"
+            offset += 1
+        else:
+            debug(f"Data bit at index {i}, updated i: {i - offset}")
+            output += binary_value[i - offset]
+    return output
+
+
+def flip_parity_bit(binary_value: str, index: int) -> str:
+    """Flips the parity bit at the given index
+    Args:
+        binary_value(str): The binary value to flip the parity bit in
+        index(int): The index of the parity bit to flip
+    Returns:
+        (str) The binary value with the flipped parity bit
+    """
+    # Get the parity bit at the given index
+    parity_bit = binary_value[index]
+    # Flip the parity bit
+    if parity_bit == "0":
+        binary_value = binary_value[:index] + "1" + binary_value[index + 1 :]
+    else:
+        binary_value = binary_value[:index] + "0" + binary_value[index + 1 :]
+    return binary_value
+
+
+def parity_bit_check(binary_value: str, index: int) -> str:
+    """Do a binary check for the binary value relating to the given parity bit index
+    Args:
+        binary_value(str): The binary value to check
+        index(int): The index of the parity bit that determines which part of the
+            binary value to check
+    Returns:
+        (str) The binary value with parity bit flipped (if needed)
+    """
+    # Generalize these rules somehow:
+    # 0: Overall parity of the entire binary value
+    # 1: every even column (when 1-indexed)
+    # 2: every 3-4th column, repeating (when 1-indexed)
+    # 4: every even row (when 1-indexed)
+    # 8: every 3-4th row, repeating (when 1-indexed)
+    # 16: every 5-8th column, repeating (when 1-indexed)
+    # 32: every 5-8th row, repeating (when 1-indexed)
+    # 64: every 9-16th column, repeating (when 1-indexed)
+    # 128: every 9-16th row, repeating (when 1-indexed)
+    # 256: every 17-32th column, repeating (when 1-indexed)
+    # 512: every 17-32th row, repeating (when 1-indexed)
+
+    # TODO: Get the relevant part of the binary value to check
+    check_value = binary_value[index:]
+
+    # Get the number of 1's in the binary value
+    ones = sum([1 for bit in check_value if bit == "1"])
+    # Flip the parity bit if needed
+    if ones % 2 != 0:
+        binary_value = flip_parity_bit(binary_value, index)
+    return binary_value
+
+
 def encode_hamming_code(value: int) -> str:
     """Encodes the given value as a Hamming-Code
     Args:
@@ -64,14 +155,18 @@ def encode_hamming_code(value: int) -> str:
     # reduce(xor, [i for i, bit in enumerate(bin(value)[2:]) if bit == "1"])
     # This is not what we are doing though... We are trying to encode the value
 
-    # Convert the value to binary
-    binary_value = bin(value)[2:]
-    # Get the length of the binary value
+    binary_value = bin(value)[2:]  # Remove the '0b' prefix
     length = len(binary_value)
-    # Get the square size
-    square_size = length**2
     # Get the number of parity bits (not including overall bit)
     parity_bits = get_total_parity_bits(length)
+    # Inject blank parity bits in every power of 2 in the binary value
+    binary_value = inject_parity_bits(binary_value, parity_bits)
+    # Check the parity bits and flip if needed
+    for i in range(1, parity_bits + 1):
+        binary_value = parity_bit_check(binary_value, i)
+    # Check the overall parity bit check
+    binary_value = parity_bit_check(binary_value, 0)
+    return binary_value
 
 
 def get_total_parity_bits(length: int) -> int:
