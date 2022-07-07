@@ -111,15 +111,16 @@ def flip_parity_bit(binary_value: str, index: int) -> str:
     return binary_value
 
 
-def parity_bit_check(binary_value: str, index: int) -> str:
+def parity_bit_check(injected_binary_value: str, index: int, parity_bits: int) -> str:
     """Do a binary check for the binary value relating to the given parity bit index
     Args:
-        binary_value(str): The binary value to check
+        injected_binary_value(str): The binary value to check
         index(int): The index of the parity bit that determines which part of the
             binary value to check
     Returns:
         (str) The binary value with parity bit flipped (if needed)
     """
+
     # Generalize these rules somehow:
     # 0: Overall parity of the entire binary value
     # 1: every even column (when 1-indexed)
@@ -138,11 +139,46 @@ def parity_bit_check(binary_value: str, index: int) -> str:
     # Check the required width of the imaginary 2d array
     #   - Width is a power of two, starting with two.
     #   - Height is a power of two, starting with two, but adding AFTER the width
-    check_value = binary_value[index:]
+
+    # TODO: Remove calculations when algorithm works
+    # total:p:d 4:3:1, 8:4:4, 16:5:9, 32:6:28
+    # 3-1 = 2 => 2**2 = 4
+    # 4-1 = 3 => 2**3 = 8
+    # 5-1 = 4 => 2**4 = 16
+    # 2**(p-1) = total
+
+    # Build a new padded binary value for every parity bit pass
+    total = 2**parity_bits
+    padded_binary_value = injected_binary_value + "0" * (
+        total - len(injected_binary_value)
+    )
+
+    # TODO: Get the relevant part of the binary value to check
+    if index == 1:
+        # Check every even column
+        relevant_part = [int(bit) for bit in padded_binary_value[1::2]]
+    elif index == 2:
+        # Check every 3-4th column
+        relevant_part = []
+        for i in range(1, index + 1):
+            relevant_part += [int(bit) for bit in padded_binary_value[index + i :: 4]]
+    elif index == 3:
+        # Check every even row
+        relevant_part = []
+        for row in range(1, math.log2(total) + 1):
+            relevant_part += [
+                int(bit)
+                for bit in padded_binary_value[
+                    row * math.log2(total) : row * math.log2(total) * 2 : 2
+                ]
+            ]
+        relevant_part = [int(bit) for bit in padded_binary_value[1::2]]
+    # TODO: Need to compensate for odd math.log2(total)...
+    # [bit for bit in 'abcdefghijklmnopqrstuvwxyz'[3::4]] + [bit for bit in 'abcdefghijklmnopqrstuvwxyz'[4::4]]
     print(f"log check_value: {math.log2(13)}")
 
     # Get the number of 1's in the binary value
-    ones = sum([1 for bit in check_value if bit == "1"])
+    ones = sum(relevant_part)
     # Flip the parity bit if needed
     if ones % 2 != 0:
         binary_value = flip_parity_bit(binary_value, index)
@@ -165,13 +201,13 @@ def encode_hamming_code(value: int) -> str:
     # Get the number of parity bits (not including overall bit)
     parity_bits = get_total_parity_bits(length)
     # Inject blank parity bits in every power of 2 in the binary value
-    binary_value = inject_parity_bits(binary_value, parity_bits)
+    injected_binary_value = inject_parity_bits(binary_value, parity_bits)
     # Check the parity bits and flip if needed
     for i in range(1, parity_bits + 1):
-        binary_value = parity_bit_check(binary_value, i)
+        checked_binary_value = parity_bit_check(injected_binary_value, i, parity_bits)
     # Check the overall parity bit check
-    binary_value = parity_bit_check(binary_value, 0)
-    return binary_value
+    checked_binary_value = parity_bit_check(injected_binary_value, 0, parity_bits)
+    return checked_binary_value
 
 
 def get_total_parity_bits(length: int) -> int:
