@@ -134,7 +134,12 @@ def parity_bit_check(binary_value: str, index: int) -> str:
     # 512: every 17-32th row, repeating (when 1-indexed)
 
     # TODO: Get the relevant part of the binary value to check
+    # Get length of the binary value
+    # Check the required width of the imaginary 2d array
+    #   - Width is a power of two, starting with two.
+    #   - Height is a power of two, starting with two, but adding AFTER the width
     check_value = binary_value[index:]
+    print(f"log check_value: {math.log2(13)}")
 
     # Get the number of 1's in the binary value
     ones = sum([1 for bit in check_value if bit == "1"])
