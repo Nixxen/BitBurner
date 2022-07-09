@@ -238,6 +238,7 @@ export async function main(ns) {
 	};
 	const pruneComplete = (nodeIndex) => {
 		// Remove note from upgrade checking if it is fully upgraded.
+		// Returns true if the node was pruned.
 		const stats = getNode(nodeIndex);
 		const is_max_upgrade = (stats) => {
 			if (
@@ -254,7 +255,9 @@ export async function main(ns) {
 			ns.print(
 				`Info - Node with index ${nodeIndex} has been fully upgraded and will be ignored in the upgrade cycle.`
 			);
+			return true;
 		}
+		return false;
 	};
 
 	const pruneOverROI = (nodeIndex, roi) => {
@@ -315,6 +318,9 @@ export async function main(ns) {
 		// Scan all hacknet nodes, check if upgrades are cheaper than default action.
 		for (let o of openList) {
 			if (!(o in closedList)) {
+				if (pruneComplete(o)) {
+					continue;
+				}
 				let nodeBestROI = Infinity;
 				for (let action of range(1, 4)) {
 					let cost = Infinity;
@@ -379,9 +385,24 @@ export async function main(ns) {
 					).find((key) => actions[key] === bestAction)}.`
 				);
 			}
-			if (bestNodeIndex != -1) {
-				pruneComplete(bestNodeIndex);
-			}
+		} else {
+			consoleWarn(
+				`Info - Best action: ${Object.keys(actions).find(
+					(key) => actions[key] === bestAction
+				)}, with an increase of ${ns.nFormat(
+					bestIncrease,
+					"0.0a"
+				)}/s, cost of ${ns.nFormat(
+					bestCost,
+					"0.00a"
+				)} and ROI of ${ns.nFormat(
+					bestROI,
+					"00:00:00"
+				)}(HH:MM:SS) is over the cutoff time of ${ns.nFormat(
+					cutoffTime,
+					"00:00:00"
+				)}(HH:MM:SS).`
+			);
 		}
 		await ns.sleep(sleepPurchaseTimeout);
 	}
