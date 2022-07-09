@@ -8,15 +8,23 @@ export async function main(ns) {
 	var maxRam = ns.getPurchasedServerMaxRam();
 	var maxServers = ns.getPurchasedServerLimit();
 
-	var virus = "money-maker.js";
+	var virus = "/scripts/early/money-maker.js";
 	var virusRam = ns.getScriptRam(virus);
 
 	function canPurchaseServer() {
-		ns.disableLog('disableLog');
-		ns.disableLog('getServerMoneyAvailable');
-		var playerMoney = ns.getServerMoneyAvailable(homeServ)
-		var serverCost = ns.getPurchasedServerCost(pRam)
-		ns.print("Awaiting player money to increase: " + ns.nFormat(playerMoney, '($ 0.00 a)') + "/" + ns.nFormat(serverCost, '($ 0.00 a)') + "(" + (playerMoney/serverCost*100).toFixed(2) + "%)");
+		ns.disableLog("disableLog");
+		ns.disableLog("getServerMoneyAvailable");
+		var playerMoney = ns.getServerMoneyAvailable(homeServ);
+		var serverCost = ns.getPurchasedServerCost(pRam);
+		ns.print(
+			"Awaiting player money to increase: " +
+				ns.nFormat(playerMoney, "($ 0.00 a)") +
+				"/" +
+				ns.nFormat(serverCost, "($ 0.00 a)") +
+				"(" +
+				((playerMoney / serverCost) * 100).toFixed(2) +
+				"%)"
+		);
 		return playerMoney > serverCost;
 	}
 
@@ -78,7 +86,9 @@ export async function main(ns) {
 	while (true) {
 		await autoUpgradeServers();
 		if (pRam === maxRam) {
-			ns.tprint("Upgraded all servers to maximum capacity. Closing script.")
+			ns.tprint(
+				"Upgraded all servers to maximum capacity. Closing script."
+			);
 			break;
 		}
 		// move up to next tier
