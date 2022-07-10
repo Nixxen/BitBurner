@@ -27,9 +27,9 @@ export async function main(ns) {
 					break;
 				}
 				visited[node] = node;
-				const neighbours = ns.scan(node);
-				for (let i = 0; i < neighbours.length; i++) {
-					const child = neighbours[i];
+				const neighbors = ns.scan(node);
+				for (let i = 0; i < neighbors.length; i++) {
+					const child = neighbors[i];
 					if (hasIgnoredString(child) || visited[child]) {
 						continue;
 					}
@@ -42,12 +42,16 @@ export async function main(ns) {
 				}
 			}
 		}
+		if (stack.length === 0) {
+			ns.tprint("Exhausted network, node not found");
+			return null;
+		}
 		return nodePairs;
 	}
 
 	function reconstructPath(nodes) {
 		// for every node, map them to parent
-		const parentMap = nodes.reduce(function (acc, node) {
+		const parentMap = nodes.reduce((acc, node) => {
 			acc[node.current] = node.parent;
 			return acc;
 		}, {});
@@ -59,8 +63,10 @@ export async function main(ns) {
 		while (curNode !== origin) {
 			path.push(curNode);
 			ns.print("Adding server to path: " + curNode);
-			var parent = parentMap[curNode];
+			const parent = parentMap[curNode];
+			ns.print("Parent: " + parent);
 			if (!parent) {
+				ns.tprint("Error: parent not found for node " + curNode);
 				break;
 			}
 			curNode = parent;
@@ -70,6 +76,9 @@ export async function main(ns) {
 	}
 
 	const nodes = getNetworkNodePairs();
+	if (!nodes) {
+		return;
+	}
 	const path = reconstructPath(nodes);
 	ns.tprint(path);
 }
