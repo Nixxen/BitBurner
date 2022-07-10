@@ -2,6 +2,7 @@
 export async function main(ns) {
 	const target = ns.args[0];
 	const origin = ns.getHostname();
+	let foundTarget = "";
 
 	// patterns that indicates whether we ignore them
 	const ignored = ["pserv"];
@@ -23,7 +24,8 @@ export async function main(ns) {
 		while (stack.length > 0) {
 			const node = stack.pop();
 			if (!visited[node]) {
-				if (node === target) {
+				if (node.includes(target)) {
+					foundTarget = node;
 					break;
 				}
 				visited[node] = node;
@@ -59,7 +61,7 @@ export async function main(ns) {
 		ns.print("Target found. Recreating path");
 		ns.print("Number of nodes tracked: " + nodes.length);
 		let path = [];
-		let curNode = target;
+		let curNode = foundTarget;
 		while (curNode !== origin) {
 			path.push(curNode);
 			ns.print("Adding server to path: " + curNode);
