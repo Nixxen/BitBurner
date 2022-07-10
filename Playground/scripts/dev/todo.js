@@ -1,12 +1,12 @@
 // TODO:
 // - [ ] Make backdoor deploy script for any known servers, based on previous runs (faction invites, cost decreases, etc)
-//     - Servers:
+//     - Servers (server (faction)):
 //         - [ ] CSEC (CSEC faction)
 //         - [ ] avmnite-02h (NiteSec faction)
 //         - [ ] I.I.I.I (The Black Hand faction)
 //         - [ ] iron-gym (Cheaper workout cost)
 //         - [ ] run4theh111z (Bitrunners faction, requires deep scanning > 10 hops)
-//      - Edit: Turns out I can not backdoor servers through scripts yet, and that is apparently something that is unlocked later...
+//      - Edit: Turns out I can not backdoor servers through scripts yet, and that is apparently something that is unlocked later... Just use this list for manual deployment on resets.
 // - [ ] Make fleet hack script
 // - [ ] Make "get server path" helper script
 // - [ ] Make a script to scan for, and solve contracts (if possible)
