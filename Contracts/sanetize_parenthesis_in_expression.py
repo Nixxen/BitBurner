@@ -19,8 +19,10 @@
 #  - ")(" -> [""]
 
 from collections import defaultdict, deque
+import logging
 
-# TODO: Works on the test cases, but not on the actual input.
+logging.basicConfig(level=logging.WARNING)
+logger = logging.getLogger(__name__)
 
 
 def main():
@@ -31,23 +33,26 @@ def main():
             "()())()",
             "(a)())()",
             ")(",
+            "())))((a))(a)())"
         ]
         answers = [
             ["()()()", "(())()"],
             ["(a)()()", "(a())()"],
             [""],
+            ['()((a))(a)()', '()((a))(a())', '(((a))(a)())', '()((a)(a)())'],
         ]
         # fmt: on
         for string, answer in zip(strings, answers):
             result = sanitize_parenthesis_in_expression(string)
             print(f"Tested string {string}")
-            print(f"Expected result: {answer}")
-            print(f"Actual result: {result}")
-            assert result == answer
+            print(f"Expected result: \t{set(answer)}")
+            print(f"Actual result: \t\t{set(result)}")
+            assert set(result) == set(answer)
             print("Passed!")
     else:
         string = input("Enter string: ")
         result = sanitize_parenthesis_in_expression(string)
+        result = "[" + (", ".join(result) if len(result) > 0 else "") + "]"
         print(f"Result: {result}")
 
 
@@ -68,15 +73,17 @@ def sanitize_parenthesis_in_expression(string: str) -> list:
         current = stack.pop()
         if is_valid(current):
             valid.append(current)
-        for i in range(len(current)):
-            if i != len(current):
-                new_string = current[:i] + current[i + 1 :]
-            else:
-                new_string = current[:i]
-            if new_string not in visited:
-                stack.append(new_string)
-                visited[new_string] = True
+        for i, char in enumerate(current):
+            if char == "(" or char == ")":
+                if i != len(current):
+                    new_string = current[:i] + current[i + 1 :]
+                else:
+                    new_string = current[:i]
+                if new_string not in visited:
+                    stack.append(new_string)
+                    visited[new_string] = True
     valid.sort(key=len, reverse=True)
+    logger.info("Valid: %s", valid)
     results = [x for x in valid if len(x) > 0 and len(x) == len(valid[0])]
     return results if len(results) > 0 else [""]
 
