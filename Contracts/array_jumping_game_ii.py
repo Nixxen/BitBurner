@@ -69,9 +69,9 @@ def main():
             assert result == answer, f"Expected {answer}, got {result}"
             print("Test passed")
     else:
-        array = [2, 3, 3, 1, 3, 3, 3, 5, 2, 1, 1, 1, 4, 1, 3, 2, 3, 0]
+        array = [int(x) for x in input("Enter array: ").split(",")]
         result = minimum_jumps(array)
-        print(result)
+        print(f"Minimum jumps: {result}")
 
 
 def minimum_jumps(array: list) -> int:
