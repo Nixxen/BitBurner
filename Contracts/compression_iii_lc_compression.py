@@ -22,6 +22,7 @@
 #
 # You are given the following input string:
 #     bhkekeQtap7ekw5Yehfio81ao8181ao8181aI6JUr6JUrI6JUr6J7pI6POQ3Jx6lG168O8O8O8OEO8O7TdjJIY
+#     XB7elZdlZdlZdlPHHHHHHm3KEDzDzDzDzqZzDzDGvzDzzHsBdogrogrogrhve01X01X01X016qnVmUHHE6VmVmUHHE6VX
 # Encode it using Lempel-Ziv encoding with the minimum possible output length.
 #
 # Examples (some have other possible encodings of minimal length):
