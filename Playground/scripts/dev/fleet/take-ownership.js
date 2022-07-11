@@ -1,5 +1,5 @@
 /** @param {NS} ns **/
-export async function main(ns) { 
+export async function main(ns) {
 	var server = ns.args[0];
 	var homeServer = "home";
 	var cracks = {
@@ -7,9 +7,8 @@ export async function main(ns) {
 		"FTPCrack.exe": ns.ftpcrack,
 		"relaySMTP.exe": ns.relaysmtp,
 		"HTTPWorm.exe": ns.httpworm,
-		"SQLInject.exe": ns.sqlinject
+		"SQLInject.exe": ns.sqlinject,
 	};
-
 
 	function getNumCracks() {
 		return Object.keys(cracks).filter(function (file) {
