@@ -17,9 +17,10 @@ export function* range(start = 0, end = null, step = 1) {
  * Returns a list of all nodes in the network using DFS
  * @remarks RAM cost: 0.2GB
  * @param {NS} ns
+ * @param {string} origin The node to start the DFS from
  * @returns {string[]} List of all nodes in the network
  */
-export function getNetworkNodes(ns) {
+export function getNetworkNodes(ns, origin) {
 	let visited = {};
 	let stack = [];
 	stack.push(origin);
@@ -53,3 +54,15 @@ export function canHack(ns, node) {
 	const nodeHackSkill = ns.getServerRequiredHackingLevel(node);
 	return hackSkill >= nodeHackSkill;
 }
+
+/**
+ * Returns the money the player has
+ * @remarks RAM cost 0.1GB
+ * @param {NS} ns
+ * @returns {number} money the player has
+ */
+export function getPlayerMoney(ns) {
+	return ns.getServerMoneyAvailable("home");
+}
+
+export function scrapeServerHackingInfo()
