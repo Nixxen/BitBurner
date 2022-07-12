@@ -29,13 +29,15 @@
 //      - Faction lock: Rep + money from work. Removes focus penalty from tasks.
 // - [x] Netburners (Hacknet nodes)
 //      - Faction lock: Hacknet related
+// - [x] Slum Snakes (Crime and combat related)
+//      - Faction lock: Dex skill, dex exp, and crime money
 // - [ ] Chongquin
 // - [x] Sector-12 (??)
 //      - Faction lock: ??
 // - [ ] Aevum
 // - [ ] Volkhaven
-// - [ ] New Tokyo (Mixed bag.)
+// - [x] New Tokyo (Mixed bag.)
 //      - Faction lock: +20% combat exp
-// - [ ] Ishima (Combat skill related)
+// - [x] Ishima (Combat skill related)
 //      - Faction lock: Dex skill, crime money and crime success rate
 // - [ ] NSA?
