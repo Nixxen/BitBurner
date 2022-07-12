@@ -65,4 +65,31 @@ export function getPlayerMoney(ns) {
 	return ns.getServerMoneyAvailable("home");
 }
 
-export function scrapeServerHackingInfo()
+/**
+ * Scrapes a server for hacking-relevant information
+ * @remarks RAM cost 2.8GB
+ * @param {NS} ns
+ * @param {string} node server to scrape
+ * @returns {object} object containing the server's hacking-relevant information
+ */
+export function getServerHackingInfo(ns, node) {
+	return {
+		name: node,
+		maxMoney: ns.getServerMaxMoney(node),
+		minSecurity: ns.getServerMinSecurityLevel(node),
+		hackLevel: ns.getServerRequiredHackingLevel(node),
+		hackChance: getHackChance(ns, node),
+	};
+}
+
+/**
+ * Get the players probability of successfully hacking a server
+ * @remarks RAM cost 2.5GB
+ * @param {NS} ns
+ * @param {string} node server to check
+ */
+export function getHackChance(ns, node) {
+	const server = ns.getServer(node);
+	const player = ns.getPlayer();
+	return ns.formulas.hacking.hackChance(server, player);
+}
