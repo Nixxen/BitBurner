@@ -1,18 +1,39 @@
-import { getNetworkNodes, canHack } from "../util";
+import { getNetworkNodes, canHack, getServerHackingInfo } from "scripts/utils";
 
-/** @param {NS} ns */
-export async function main(ns) {
-	// Scans all servers and finds the most profitable, single attack, server.
-	// This is only profitable for single attacks, not multiple servers attacking the same server.
-	// Logic:
-	// - Get all servers on the network (DFS)
-	// - For each server, filter for hackable (based on current hack skill, ignoring pserv)
-	// - For each hackable server, get server info
-	// - Sort servers by profit (max money? Does hacking level affect this? Other factors?)
-	// - Return the most profitable server (or save the list of all servers for later)
-
-	const networkNodes = getNetworkNodes(ns);
+/**
+ * Scans the network for servers that can be hacked, and returns a list
+ * of servers that can be hacked, ordered by most money potential.
+ * @param {NS} ns
+ * @returns {Promise<Array>} a sorted list of servers that can be hacked
+ */
+export async function bestAttack(ns) {
+	const origin = "home";
+	const networkNodes = getNetworkNodes(ns, origin);
+	ns.tprint(`Found ${networkNodes.length} nodes in the network`);
 	const hackableServers = networkNodes.filter(
 		(node) => !node.includes("pserv") && canHack(ns, node)
 	);
+	ns.tprint(`Found ${hackableServers.length} hackable servers`);
+	const serverInfo = hackableServers
+		.map((node) => {
+			return getServerHackingInfo(ns, node);
+		})
+		.sort((a, b) => {
+			return b.maxMoney - a.maxMoney;
+		});
+	ns.tprint(`Sorted ${serverInfo.length} servers by max money`);
+	ns.tprint(
+		`${
+			serverInfo[0].name
+		} has the most money potential, details: ${JSON.stringify(
+			serverInfo[0]
+		)}`
+	);
+	return serverInfo;
+}
+
+/** @param {NS} ns */
+export async function main(ns) {
+	const result = await bestAttack(ns);
+	return result;
 }
