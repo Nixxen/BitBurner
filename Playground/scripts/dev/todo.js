@@ -4,12 +4,14 @@
 //         - [ ] CSEC (CSEC faction)
 //         - [ ] avmnite-02h (NiteSec faction)
 //         - [ ] I.I.I.I (The Black Hand faction)
-//         - [ ] iron-gym (Cheaper workout cost)
+//         - [ ] iron-gym (Or any other gym. Cheaper workout cost)
 //         - [ ] run4theh111z (Bitrunners faction, requires deep scanning > 10 hops)
 //      - Edit: Turns out I can not backdoor servers through scripts yet, and that is apparently something that is unlocked later... Just use this list for manual deployment on resets.
 // - [ ] Make fleet hack script
 // - [ ] Make "get server path" helper script
 // - [ ] Make a script to scan for, and solve contracts (if possible)
+// - [ ] Make a script to find duplicate scripts (failed VScode sync and removal, etc)
+// - [ ] Make a script to store player info in a text file before a reset, allowing for easy access to player info before the formulas has been unlocked on a new run.
 
 // Completed factions:
 // - [x] CSEC (Hacking.)
