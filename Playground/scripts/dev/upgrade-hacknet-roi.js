@@ -1,4 +1,4 @@
-import { range } from "/scripts/dev/util.js";
+import { range } from "/scripts/utils.js";
 
 /** @param {NS} ns */
 export async function main(ns) {
