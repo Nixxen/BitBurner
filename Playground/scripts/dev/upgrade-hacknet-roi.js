@@ -264,12 +264,16 @@ export async function main(ns) {
 		return false;
 	};
 
-	const pruneOverROI = (nodeIndex, roi) => {
+	const pruneOverROI = (nodeIndex, action, roi) => {
 		// Remove note from upgrade checking if its best ROI is higher than the cutoff time.
 		if (roi > cutoffTime) {
 			closedList.push(nodeIndex);
 			ns.print(
-				`Info - Node with index ${nodeIndex} has best action with ROI ${ns.nFormat(
+				`Info - Node with index ${nodeIndex} has best action, ${Object.keys(
+					actions
+				).find(
+					(key) => actions[key] === action
+				)}, with ROI ${ns.nFormat(
 					roi,
 					timeFormat
 				)}, but ROI cutoff is ${ns.nFormat(
@@ -394,6 +398,7 @@ export async function main(ns) {
 					continue;
 				}
 				let nodeBestROI = Infinity;
+				let nodeBestAction = actions.purchaseNode;
 				for (let action of range(1, 4)) {
 					let cost = Infinity;
 					let increase = 1;
@@ -423,9 +428,10 @@ export async function main(ns) {
 					}
 					if (actionROI < nodeBestROI) {
 						nodeBestROI = actionROI;
+						nodeBestAction = action;
 					}
 				}
-				pruneOverROI(o, nodeBestROI);
+				pruneOverROI(o, nodeBestAction, nodeBestROI);
 			}
 		}
 
