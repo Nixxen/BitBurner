@@ -1,4 +1,4 @@
-import { range } from "/scripts/utils.js";
+import { range } from "scripts/utils";
 
 /** @param {NS} ns */
 export async function main(ns) {
@@ -75,11 +75,11 @@ export async function main(ns) {
 		ns.print(
 			`\tPurchasing new Hacknet Node. Cost: ${ns.nFormat(
 				cost,
-				"0.00a"
+				moneyFormat
 			)}/${ns.nFormat(
 				getPlayerMoney() - moneyKeepLimit,
-				"0.00a"
-			)} (with ${ns.nFormat(moneyKeepLimit, "0.00a")} offset).`
+				moneyFormat
+			)} (with ${ns.nFormat(moneyKeepLimit, moneyFormat)} offset).`
 		);
 		let attemptingPurchase = true;
 		while (attemptingPurchase) {
@@ -99,10 +99,10 @@ export async function main(ns) {
 		ns.print(
 			`\tUpgrading level on Hacknet node with index ${nodeIndex} to ${
 				getNode(nodeIndex).level + 1
-			}. Cost: ${ns.nFormat(cost, "0.00a")}/${ns.nFormat(
+			}. Cost: ${ns.nFormat(cost, moneyFormat)}/${ns.nFormat(
 				getPlayerMoney() - moneyKeepLimit,
-				"0.00a"
-			)} (with ${ns.nFormat(moneyKeepLimit, "0.00a")} offset).`
+				moneyFormat
+			)} (with ${ns.nFormat(moneyKeepLimit, moneyFormat)} offset).`
 		);
 		let attemptingUpgrade = true;
 		while (attemptingUpgrade) {
@@ -125,10 +125,10 @@ export async function main(ns) {
 		ns.print(
 			`\tUpgrading ram on Hacknet node with index ${nodeIndex} to ${
 				getNode(nodeIndex).ram + 1
-			}. Cost: ${ns.nFormat(cost, "0.00a")}/${ns.nFormat(
+			}. Cost: ${ns.nFormat(cost, moneyFormat)}/${ns.nFormat(
 				getPlayerMoney() - moneyKeepLimit,
-				"0.00a"
-			)} (with ${ns.nFormat(moneyKeepLimit, "0.00a")} offset).`
+				moneyFormat
+			)} (with ${ns.nFormat(moneyKeepLimit, moneyFormat)} offset).`
 		);
 		let attemptingUpgrade = true;
 		while (attemptingUpgrade) {
@@ -151,10 +151,10 @@ export async function main(ns) {
 		ns.print(
 			`\tUpgrading core on Hacknet node with index ${nodeIndex} to ${
 				getNode(nodeIndex).cores + 1
-			}. Cost: ${ns.nFormat(cost, "0.00a")}/${ns.nFormat(
+			}. Cost: ${ns.nFormat(cost, moneyFormat)}/${ns.nFormat(
 				getPlayerMoney() - moneyKeepLimit,
-				"0.00a"
-			)} (with ${ns.nFormat(moneyKeepLimit, "0.00a")} offset).`
+				moneyFormat
+			)} (with ${ns.nFormat(moneyKeepLimit, moneyFormat)} offset).`
 		);
 		let attemptingUpgrade = true;
 		while (attemptingUpgrade) {
@@ -180,12 +180,16 @@ export async function main(ns) {
 		return ns.hacknet.getNodeStats(nodeIndex);
 	};
 	// Cheeky production and increase derived from https://github.com/danielyxie/bitburner/blob/535812a0fc4307a7bf767fdcca760f39d3206ade/src/Hacknet/formulas/HacknetNodes.ts#L4
-	const getProduction = (level, ram, cores, mult) =>
-		level *
-		hacknetConstants.MoneyGainPerLevel *
-		Math.pow(1.035, ram - 1) *
-		((cores + 5) / 6) *
-		mult;
+	const getProduction = (level, ram, cores, mult) => {
+		const production =
+			level *
+			hacknetConstants.MoneyGainPerLevel *
+			Math.pow(1.035, ram - 1) *
+			((cores + 5) / 6) *
+			mult;
+		return production;
+	};
+
 	const getLevelIncrease = (nodeIndex) => {
 		const node = getNode(nodeIndex);
 		const levelsToMax = hacknetConstants.MaxLevel - node.level;
@@ -267,13 +271,79 @@ export async function main(ns) {
 			ns.print(
 				`Info - Node with index ${nodeIndex} has best action with ROI ${ns.nFormat(
 					roi,
-					"00:00:00"
+					timeFormat
 				)}, but ROI cutoff is ${ns.nFormat(
 					cutoffTime,
-					"00:00:00"
+					timeFormat
 				)}. No upgrades left under the ROI limit. Node will be ignored in the upgrade cycle.`
 			);
 		}
+	};
+
+	// Cheeky upgrade formulas based on https://github.com/danielyxie/bitburner/blob/dev/src/Hacknet/formulas/HacknetNodes.ts
+	const getTotalLevelCost = () => {
+		let currLevel = 1;
+		const costMult = playerMultipliers.levelCost;
+		let totalMultiplier = 0;
+		const mult = hacknetConstants.UpgradeLevelMult;
+		const sanitizedLevels = hacknetConstants.MaxLevel;
+		for (let i = 0; i < sanitizedLevels; ++i) {
+			totalMultiplier +=
+				hacknetConstants.LevelBaseCost * Math.pow(mult, currLevel);
+			++currLevel;
+		}
+		return (hacknetConstants.BaseCost / 2) * totalMultiplier * costMult;
+	};
+
+	const getTotalRamCost = () => {
+		let currentRam = 1;
+		const costMult = playerMultipliers.ramCost;
+		let totalCost = 0;
+		let numUpgrades = Math.round(Math.log2(currentRam));
+		const sanitizedLevels = Math.log2(hacknetConstants.MaxRam);
+		for (let i = 0; i < sanitizedLevels; ++i) {
+			const baseCost = currentRam * hacknetConstants.RamBaseCost;
+			const mult = Math.pow(hacknetConstants.UpgradeRamMult, numUpgrades);
+			totalCost += baseCost * mult;
+			currentRam *= 2;
+			++numUpgrades;
+		}
+		totalCost *= costMult;
+		return totalCost;
+	};
+
+	const getTotalCoreCost = () => {
+		const sanitizedCores = hacknetConstants.MaxCores;
+		const costMult = playerMultipliers.coreCost;
+		let currentCores = 1;
+		const coreBaseCost = hacknetConstants.CoreBaseCost;
+		const mult = hacknetConstants.UpgradeCoreMult;
+		let totalCost = 0;
+		for (let i = 0; i < sanitizedCores; ++i) {
+			totalCost += coreBaseCost * Math.pow(mult, currentCores - 1);
+			++currentCores;
+		}
+		totalCost *= costMult;
+		return totalCost;
+	};
+
+	const getFullUpgradeCost = () => {
+		const baseCost = getNextNodeCost();
+		const totalLevelCost = getTotalLevelCost();
+		const totalRamCost = getTotalRamCost();
+		const totalCoreCost = getTotalCoreCost();
+		const cost = totalLevelCost + totalRamCost + totalCoreCost + baseCost;
+		return cost;
+	};
+
+	const getFullUpgradeProduction = () => {
+		const newProduction = getProduction(
+			hacknetConstants.MaxLevel,
+			hacknetConstants.MaxRam,
+			hacknetConstants.MaxCores,
+			playerMultipliers.production
+		);
+		return newProduction;
 	};
 
 	const actions = {
@@ -287,9 +357,11 @@ export async function main(ns) {
 	consoleWarn(
 		`Info - Auto purchasing and upgrading hacknet nodes until ROI exceeds cutoff time of ${hours} hours.`
 	);
+	const moneyFormat = "$0.000a";
+	const timeFormat = "00:00:00";
 	const cutoffTime = hours * 60 * 60; // Max time to allow for ROI. n hours * 60 minutes * 60 seconds = seconds per n hours.
 	const sleepWaitingTimeout = 10000; // When awaiting money
-	const sleepPurchaseTimeout = 200; // After each successful purchase
+	const sleepPurchaseTimeout = 500; // After each successful purchase
 	let openList = [...Array(ns.hacknet.numNodes()).keys()];
 	let closedList = [];
 
@@ -362,13 +434,13 @@ export async function main(ns) {
 			ns.print(
 				`Info - Best action: ${Object.keys(actions).find(
 					(key) => actions[key] === bestAction
-				)}, with an increase of ${ns.nFormat(
+				)}, with an increase of +${ns.nFormat(
 					bestIncrease,
-					"0.0a"
-				)}/s, cost of ${ns.nFormat(
+					moneyFormat
+				)} / s, cost of ${ns.nFormat(
 					bestCost,
-					"0.00a"
-				)} and ROI of ${ns.nFormat(bestROI, "00:00:00")}(HH:MM:SS)`
+					moneyFormat
+				)} and ROI of ${ns.nFormat(bestROI, timeFormat)}(HH:MM:SS)`
 			);
 			if (bestAction == actions.purchaseNode) {
 				await purchaseNode(bestCost);
@@ -386,23 +458,46 @@ export async function main(ns) {
 				);
 			}
 		} else {
-			consoleWarn(
-				`Info - Best action: ${Object.keys(actions).find(
-					(key) => actions[key] === bestAction
-				)}, with an increase of ${ns.nFormat(
-					bestIncrease,
-					"0.0a"
-				)}/s, cost of ${ns.nFormat(
-					bestCost,
-					"0.00a"
-				)} and ROI of ${ns.nFormat(
-					bestROI,
-					"00:00:00"
-				)}(HH:MM:SS) is over the cutoff time of ${ns.nFormat(
-					cutoffTime,
-					"00:00:00"
-				)}(HH:MM:SS).`
+			// TODO: Make this section iterative, over one full node, instead of upgrading the entire node.
+			const fullUpgradeCost = getFullUpgradeCost();
+			const fullUpgradeProduction = getFullUpgradeProduction();
+			const fullUpgradeROI = getROI(
+				fullUpgradeCost,
+				fullUpgradeProduction
 			);
+			if (fullUpgradeROI < cutoffTime) {
+				ns.print(
+					`Info - Best single action has higher ROI than cutoff. Best long term ROI is to purchase node and then execute full upgrade, with a total increase of +${ns.nFormat(
+						fullUpgradeProduction,
+						moneyFormat
+					)} / s, total cost of ${ns.nFormat(
+						fullUpgradeCost,
+						moneyFormat
+					)} and total ROI of ${ns.nFormat(
+						fullUpgradeROI,
+						timeFormat
+					)}(HH:MM:SS)`
+				);
+				await purchaseNode(bestCost);
+			} else {
+				consoleWarn(
+					`Info - Best action: ${Object.keys(actions).find(
+						(key) => actions[key] === bestAction
+					)}, with an increase of ${ns.nFormat(
+						bestIncrease,
+						moneyFormat
+					)}/s, cost of ${ns.nFormat(
+						bestCost,
+						moneyFormat
+					)} and ROI of ${ns.nFormat(
+						bestROI,
+						timeFormat
+					)}(HH:MM:SS) is over the cutoff time of ${ns.nFormat(
+						cutoffTime,
+						timeFormat
+					)}(HH:MM:SS).`
+				);
+			}
 		}
 		await ns.sleep(sleepPurchaseTimeout);
 	}
