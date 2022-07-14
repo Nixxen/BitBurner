@@ -107,5 +107,6 @@ export async function writeObjectToFile(ns, list, filename) {
 	}
 	const content = stringList.join("\n");
 	await ns.write(filename, content, "w");
+	ns.alert(content);
 	ns.toast(`Wrote object to ${filename}`, "success", 3000);
 }
