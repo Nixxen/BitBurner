@@ -41,3 +41,5 @@
 // - [x] Ishima (Combat skill related)
 //      - Faction lock: Dex skill, crime money and crime success rate
 // - [ ] NSA?
+// - [x] Blade Industries (Combat skill related, some hacking)
+//      - Faction lock: Strength skill, defense skill
