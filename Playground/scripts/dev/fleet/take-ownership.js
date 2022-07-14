@@ -17,7 +17,7 @@ export async function main(ns) {
 	}
 
 	function penetrate(server) {
-		ns.print("Penetrating " + server);
+		ns.tprint("Penetrating " + server);
 		for (var file of Object.keys(cracks)) {
 			if (ns.fileExists(file, homeServer)) {
 				var runScript = cracks[file];
@@ -32,8 +32,10 @@ export async function main(ns) {
 			if (requiredPorts > 0) {
 				penetrate(server);
 			}
-			ns.print("Gaining root access on " + server);
+			ns.tprint("Gaining root access on " + server);
 			ns.nuke(server);
+		} else {
+			ns.tprint("Already have root access on " + server);
 		}
 	}
 
