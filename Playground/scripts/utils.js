@@ -93,3 +93,19 @@ export function getHackChance(ns, node) {
 	const player = ns.getPlayer();
 	return ns.formulas.hacking.hackChance(server, player);
 }
+
+/**
+ * Write an object to a file as JSON
+ * @param {NS} ns
+ * @param {list} list List of objects
+ * @param {string} filename Name of the file to write to
+ */
+export async function writeObjectToFile(ns, list, filename) {
+	let stringList = [];
+	for (let obj of list) {
+		stringList.push(JSON.stringify(obj));
+	}
+	const content = stringList.join("\n");
+	await ns.write(filename, content, "w");
+	ns.toast(`Wrote object to ${filename}`, "success", 3000);
+}
