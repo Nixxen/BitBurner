@@ -73,12 +73,16 @@ export function getPlayerMoney(ns) {
  * @returns {object} object containing the server's hacking-relevant information
  */
 export function getServerHackingInfo(ns, node) {
+	const money = ns.getServerMaxMoney(node);
+	const hackChance = getHackChance(ns, node);
+	const hackRating = money * hackChance;
 	return {
 		name: node,
-		maxMoney: ns.getServerMaxMoney(node),
+		maxMoney: money,
 		minSecurity: ns.getServerMinSecurityLevel(node),
 		hackLevel: ns.getServerRequiredHackingLevel(node),
-		hackChance: getHackChance(ns, node),
+		hackChance: hackChance,
+		hackRating: hackRating,
 	};
 }
 

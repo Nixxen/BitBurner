@@ -14,6 +14,7 @@ import {
 export async function bestAttack(ns) {
 	const origin = "home";
 	const networkNodes = getNetworkNodes(ns, origin);
+	ns.tprint(`All nodes in the network: ${networkNodes}`);
 	const hackableServers = networkNodes.filter(
 		(node) => !node.includes("pserv") && canHack(ns, node)
 	);
@@ -22,7 +23,7 @@ export async function bestAttack(ns) {
 			return getServerHackingInfo(ns, node);
 		})
 		.sort((a, b) => {
-			return b.maxMoney - a.maxMoney;
+			return b.hackRating - a.hackRating;
 		});
 	return serverInfo;
 }
