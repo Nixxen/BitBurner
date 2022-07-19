@@ -1,4 +1,4 @@
-import { bestAttack } from "scripts/fleet/best-attack";
+import { getBestAttack } from "scripts/fleet/best-attack";
 
 /** @param {NS} ns */
 export async function main(ns) {
@@ -23,6 +23,6 @@ export async function main(ns) {
 	//  - Servers are added to their batches based on their priority
 	// - Timer (Schedules attacks for batched servers)
 	// - Attacker (Executes attacks)
-	const attackList = bestAttack();
+	const attackList = getBestAttack();
 	const attackTimings = getTimings(attackList);
 }
