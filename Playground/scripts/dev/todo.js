@@ -44,7 +44,7 @@
 // - [ ] NSA?
 // - [x] Blade Industries (Combat skill related, some hacking)
 //      - Faction lock: Strength skill, defense skill
-// - [ ] Megacorp (Mostly hacking related)
+// - [x] Megacorp (Mostly hacking related)
 //      - Faction lock: +35% combat exp, +35% combat skills
 // - [ ] Daedalus (Mostly hacking, some combat)
 //      - Faction lock: Red pill
