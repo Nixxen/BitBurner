@@ -67,7 +67,7 @@ export function getPlayerMoney(ns) {
 
 /**
  * Scrapes a server for hacking-relevant information
- * @remarks RAM cost 2.8GB
+ * @remarks RAM cost 3.35GB
  * @param {NS} ns
  * @param {string} node server to scrape
  * @returns {object} object containing the server's hacking-relevant information
@@ -76,13 +76,70 @@ export function getServerHackingInfo(ns, node) {
 	const money = ns.getServerMaxMoney(node);
 	const hackChance = getHackChance(ns, node);
 	const hackRating = money * hackChance;
+	const bestAction = getBestAttackAction(ns, node);
 	return {
 		name: node,
 		maxMoney: money,
 		minSecurity: ns.getServerMinSecurityLevel(node),
 		hackLevel: ns.getServerRequiredHackingLevel(node),
+		requiredPorts: ns.getServerNumPortsRequired(node),
+		hasRoot: ns.hasRootAccess(node),
 		hackChance: hackChance,
 		hackRating: hackRating,
+		bestMove: bestAction,
+	};
+}
+
+/**
+ * Enum for containing the possible actions that can be taken against a server
+ */
+export const attackActions = {
+	idle: -1,
+	hack: 0,
+	weaken: 1,
+	grow: 2,
+};
+
+/**
+ * Analyzes the attack server and returns the best action and thread
+ * allocation for the attacking fleet.
+ * @remark RAM cost: 0.4GB
+ * @param {NS} ns
+ * @param {string} node server to get the best attack action for
+ */
+export function getBestAttackAction(ns, node) {
+	let thresholds = {
+		money: ns.getServerMaxMoney(node) * 0.75,
+		security: ns.getServerMinSecurityLevel(node) + 5,
+	};
+	let action = attackActions.idle;
+	let attackSequence = [];
+	let threadAllocation;
+	if (ns.getServerSecurityLevel(node) > thresholds.security) {
+		action = attackActions.weaken;
+		attackSequence = [attackActions.grow, attackActions.weaken];
+		const focus = 3 / 4;
+		threadAllocation = [1 - focus, focus];
+	} else if (ns.getServerMoneyAvailable(node) < thresholds.money) {
+		action = attackActions.grow;
+		attackSequence = [attackActions.grow, attackActions.weaken];
+		const focus = 3 / 5;
+		threadAllocation = [focus, 1 - focus];
+	} else {
+		action = attackActions.hack;
+		attackSequence = [
+			attackActions.hack,
+			attackActions.weaken,
+			attackActions.grow,
+			attackActions.weaken,
+		];
+		const focus = 1 / 4;
+		threadAllocation = Array(4).fill(focus);
+	}
+	return {
+		action: action,
+		attackSequence: attackSequence,
+		threadAllocation: threadAllocation,
 	};
 }
 

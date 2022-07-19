@@ -8,7 +8,7 @@ import {
 /**
  * Scans the network for servers that can be hacked, and returns a list
  * of servers that can be hacked, ordered by most money potential.
- * @remarks RAM cost 3.15GB
+ * @remarks RAM cost 3.7GB
  * @param {NS} ns
  * @param {string} sortOn The property to sort the servers by. Default is "hackRating".
  * @returns {Promise<Array>} a sorted list of servers that can be hacked
