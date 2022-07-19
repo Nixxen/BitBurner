@@ -34,7 +34,8 @@
 // - [ ] Chongquin
 // - [x] Sector-12 (??)
 //      - Faction lock: ??
-// - [ ] Aevum
+// - [x] Aevum (Mixed bag)
+//      - Faction lock: Deepscanv1, Autolink when installing
 // - [ ] Volkhaven
 // - [x] New Tokyo (Mixed bag.)
 //      - Faction lock: +20% combat exp
@@ -43,3 +44,11 @@
 // - [ ] NSA?
 // - [x] Blade Industries (Combat skill related, some hacking)
 //      - Faction lock: Strength skill, defense skill
+// - [ ] Megacorp (Mostly hacking related)
+//      - Faction lock: +35% combat exp, +35% combat skills
+// - [ ] Daedalus (Mostly hacking, some combat)
+//      - Faction lock: Red pill
+// - [ ] Shadows of Anarchy (Infiltration cheats)
+//      - Faction lock: Everything they have are faction locks.
+// - [ ] Clarke Incorporated (Mixed bag)
+//      - Faction lock: +hacking exp, +hacking skill, +hacking speed, +20% all skills
