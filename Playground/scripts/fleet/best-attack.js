@@ -8,6 +8,7 @@ import {
 /**
  * Scans the network for servers that can be hacked, and returns a list
  * of servers that can be hacked, ordered by most money potential.
+ * @remarks RAM cost 3.15GB
  * @param {NS} ns
  * @returns {Promise<Array>} a sorted list of servers that can be hacked
  */

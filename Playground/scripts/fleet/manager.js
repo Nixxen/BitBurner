@@ -1,3 +1,5 @@
+import { bestAttack } from "scripts/fleet/best-attack";
+
 /** @param {NS} ns */
 export async function main(ns) {
 	// Main manager of the hack fleet. Orchestrates the scanning, planning, timing, and batching of attacks.
@@ -21,4 +23,6 @@ export async function main(ns) {
 	//  - Servers are added to their batches based on their priority
 	// - Timer (Schedules attacks for batched servers)
 	// - Attacker (Executes attacks)
+	const attackList = bestAttack();
+	const attackTimings = getTimings(attackList);
 }
