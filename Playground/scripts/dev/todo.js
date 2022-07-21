@@ -42,13 +42,17 @@
 // - [x] Ishima (Combat skill related)
 //      - Faction lock: Dex skill, crime money and crime success rate
 // - [ ] NSA?
-// - [x] Blade Industries (Combat skill related, some hacking)
+// - [x] Blade Industries (Combat skill related, some hacking) - From Blade
 //      - Faction lock: Strength skill, defense skill
-// - [x] Megacorp (Mostly hacking related)
+// - [x] Megacorp (Mostly hacking related) - From Megacorp
 //      - Faction lock: +35% combat exp, +35% combat skills
 // - [ ] Daedalus (Mostly hacking, some combat)
 //      - Faction lock: Red pill
 // - [ ] Shadows of Anarchy (Infiltration cheats)
 //      - Faction lock: Everything they have are faction locks.
-// - [ ] Clarke Incorporated (Mixed bag)
+// - [x] Clarke Incorporated (Mixed bag) - From Clarke
 //      - Faction lock: +hacking exp, +hacking skill, +hacking speed, +20% all skills
+// - [x] Silhouette (Company rep related) - From LexoCorp
+//      - Faction lock: charisma skill, charisma exp
+// - [x] Tetrads (Combat related)
+//      - Faction lock: +30% dex skill, +30% strength skill
