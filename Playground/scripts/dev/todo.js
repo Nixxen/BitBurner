@@ -12,6 +12,9 @@
 // - [ ] Make a script to scan for, and solve contracts (if possible)
 // - [ ] Make a script to find duplicate scripts (failed VScode sync and removal, etc)
 // - [ ] Make a script to store player info in a text file before a reset, allowing for easy access to player info before the formulas has been unlocked on a new run.
+// - [ ] Make "early attack" launchpad script, that automates deployment targets
+//       of the first few minutes of the game and boots up all the "grind scripts"
+// - [ ] Extend find target script to find all targets matching keyword.
 
 // Completed factions:
 // - [x] CSEC (Hacking.)
@@ -46,7 +49,7 @@
 //      - Faction lock: Strength skill, defense skill
 // - [x] Megacorp (Mostly hacking related) - From Megacorp
 //      - Faction lock: +35% combat exp, +35% combat skills
-// - [ ] Daedalus (Mostly hacking, some combat)
+// - [x] Daedalus (Mostly hacking, some combat)
 //      - Faction lock: Red pill
 // - [ ] Shadows of Anarchy (Infiltration cheats)
 //      - Faction lock: Everything they have are faction locks.
