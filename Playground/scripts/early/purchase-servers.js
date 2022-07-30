@@ -1,5 +1,10 @@
 /** @param {NS} ns **/
 export async function main(ns) {
+	// Silence log spam
+	ns.disableLog("disableLog");
+	ns.disableLog("sleep");
+	ns.disableLog("getServerMoneyAvailable");
+
 	const target = ns.args[0];
 	const homeServ = "home";
 	let pRam = 8; // purchased ram
@@ -20,8 +25,6 @@ export async function main(ns) {
 	const getPlayerMoney = () => ns.getServerMoneyAvailable(homeServ);
 
 	const canPurchaseServer = () => {
-		ns.disableLog("disableLog");
-		ns.disableLog("getServerMoneyAvailable");
 		const playerMoney = getPlayerMoney();
 		const serverCost = ns.getPurchasedServerCost(pRam);
 		ns.print(

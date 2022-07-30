@@ -2,6 +2,11 @@ import { range } from "scripts/utils";
 
 /** @param {NS} ns */
 export async function main(ns) {
+	// Silence log spam
+	ns.disableLog("disableLog");
+	ns.disableLog("sleep");
+	ns.disableLog("getServerMoneyAvailable");
+
 	// Return Of Investment (ROI) based hacknet upgrade script. Will pick the lowest possible roi upgrade, and upgrade that.
 	// There is a cutoff limit argument input of when to stop upgrading, since the player would most likely reset the game before reaching that time.
 	// Arguments:
@@ -378,11 +383,6 @@ export async function main(ns) {
 	}
 
 	while (openList.length - closedList.length > 0) {
-		// Silence log spam
-		ns.disableLog("disableLog");
-		ns.disableLog("sleep");
-		ns.disableLog("getServerMoneyAvailable");
-
 		// Use purchase node as the default action. Any upgrades will overwrite it.
 		let bestNodeIndex = -1;
 		let bestAction = actions.purchaseNode;
