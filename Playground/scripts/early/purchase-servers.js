@@ -29,7 +29,7 @@ export async function main(ns) {
 				playerMoney,
 				"$0.00a"
 			)}/${ns.nFormat(serverCost + moneyKeepLimit, "$0.00a")}(${(
-				(playerMoney / serverCost) *
+				(playerMoney / (serverCost + moneyKeepLimit)) *
 				100
 			).toFixed(2)}%) (with ${ns.nFormat(
 				moneyKeepLimit,
