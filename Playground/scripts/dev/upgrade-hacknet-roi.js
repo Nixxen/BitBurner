@@ -76,16 +76,19 @@ export async function main(ns) {
 	const playerCanAfford = (cost) => {
 		return getPlayerMoney() - cost > moneyKeepLimit;
 	};
-	const purchaseNode = async (cost) => {
+	const printAction = (action, cost) => {
 		ns.print(
-			`\tPurchasing new Hacknet Node. Cost: ${ns.nFormat(
+			`\t${action}. Cost: ${ns.nFormat(
 				cost,
 				moneyFormat
-			)}/${ns.nFormat(
+			)}. Money available: ${ns.nFormat(
 				getPlayerMoney() - moneyKeepLimit,
 				moneyFormat
 			)} (with ${ns.nFormat(moneyKeepLimit, moneyFormat)} offset).`
 		);
+	};
+	const purchaseNode = async (cost) => {
+		printAction("Purchasing new Hacknet Node", cost);
 		let attemptingPurchase = true;
 		while (attemptingPurchase) {
 			if (playerCanAfford(cost)) {
@@ -101,14 +104,10 @@ export async function main(ns) {
 		}
 	};
 	const upgradeLevel = async (cost, nodeIndex) => {
-		ns.print(
-			`\tUpgrading level on Hacknet node with index ${nodeIndex} to ${
-				getNode(nodeIndex).level + 1
-			}. Cost: ${ns.nFormat(cost, moneyFormat)}/${ns.nFormat(
-				getPlayerMoney() - moneyKeepLimit,
-				moneyFormat
-			)} (with ${ns.nFormat(moneyKeepLimit, moneyFormat)} offset).`
-		);
+		const action = `Upgrading level on Hacknet node with index ${nodeIndex} to ${
+			getNode(nodeIndex).level + 1
+		}`;
+		printAction(action, cost);
 		let attemptingUpgrade = true;
 		while (attemptingUpgrade) {
 			if (playerCanAfford(cost)) {
@@ -127,14 +126,10 @@ export async function main(ns) {
 		}
 	};
 	const upgradeRam = async (cost, nodeIndex) => {
-		ns.print(
-			`\tUpgrading ram on Hacknet node with index ${nodeIndex} to ${
-				getNode(nodeIndex).ram + 1
-			}. Cost: ${ns.nFormat(cost, moneyFormat)}/${ns.nFormat(
-				getPlayerMoney() - moneyKeepLimit,
-				moneyFormat
-			)} (with ${ns.nFormat(moneyKeepLimit, moneyFormat)} offset).`
-		);
+		const action = `Upgrading ram on Hacknet node with index ${nodeIndex} to ${
+			getNode(nodeIndex).ram + 1
+		}`;
+		printAction(action, cost);
 		let attemptingUpgrade = true;
 		while (attemptingUpgrade) {
 			if (playerCanAfford(cost)) {
@@ -153,14 +148,10 @@ export async function main(ns) {
 		}
 	};
 	const upgradeCore = async (cost, nodeIndex) => {
-		ns.print(
-			`\tUpgrading core on Hacknet node with index ${nodeIndex} to ${
-				getNode(nodeIndex).cores + 1
-			}. Cost: ${ns.nFormat(cost, moneyFormat)}/${ns.nFormat(
-				getPlayerMoney() - moneyKeepLimit,
-				moneyFormat
-			)} (with ${ns.nFormat(moneyKeepLimit, moneyFormat)} offset).`
-		);
+		const action = `Upgrading core on Hacknet node with index ${nodeIndex} to ${
+			getNode(nodeIndex).cores + 1
+		}`;
+		printAction(action, cost);
 		let attemptingUpgrade = true;
 		while (attemptingUpgrade) {
 			if (playerCanAfford(cost)) {
