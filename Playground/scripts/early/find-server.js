@@ -15,7 +15,7 @@ export async function main(ns) {
 
 	// Use DFS to find visit all nodes in the network until we find
 	// the target server
-	function getNetworkNodePairs() {
+	const getNetworkNodePairs = () => {
 		let visited = {};
 		let stack = [];
 		stack.push(origin);
@@ -28,7 +28,7 @@ export async function main(ns) {
 					foundTarget = node;
 					break;
 				}
-				visited[node] = node;
+				visited[node] = true;
 				const neighbors = ns.scan(node);
 				for (let i = 0; i < neighbors.length; i++) {
 					const child = neighbors[i];
@@ -49,7 +49,7 @@ export async function main(ns) {
 			return null;
 		}
 		return nodePairs;
-	}
+	};
 
 	function reconstructPath(nodes) {
 		// for every node, map them to parent
