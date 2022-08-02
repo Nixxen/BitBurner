@@ -8,13 +8,19 @@
 //         - [ ] run4theh111z (Bitrunners faction, requires deep scanning > 10 hops)
 //      - Edit: Turns out I can not backdoor servers through scripts yet, and that is apparently something that is unlocked later... Just use this list for manual deployment on resets.
 // - [ ] Make fleet hack script
-// - [ ] Make "get server path" helper script
+// - [x] Make "get server path" helper script (see find server)
 // - [ ] Make a script to scan for, and solve contracts (if possible)
 // - [ ] Make a script to find duplicate scripts (failed VScode sync and removal, etc)
 // - [ ] Make a script to store player info in a text file before a reset, allowing for easy access to player info before the formulas has been unlocked on a new run.
-// - [ ] Make "early attack" launchpad script, that automates deployment targets
+// - [x] Make "early attack" launchpad script, that automates deployment targets
 //       of the first few minutes of the game and boots up all the "grind scripts"
 // - [ ] Extend find target script to find all targets matching keyword.
+// - [ ] Stock exchange script that runs without 4s market data. Rough plan:
+//      - Needs predictive history matching.
+//      - Read market data
+//      - Prime algorithm on stored data
+//          - Fourier transforms? Need to look at different predictions
+//      - Make predictions on primed algorithm
 
 // Completed factions:
 // - [x] CSEC (Hacking.)
@@ -39,7 +45,7 @@
 //      - Faction lock: ??
 // - [x] Aevum (Mixed bag)
 //      - Faction lock: Deepscanv1, Autolink when installing
-// - [ ] Volhaven
+// - [x] Volhaven
 //      - Faction lock: +40% defense skill
 // - [x] New Tokyo (Mixed bag.)
 //      - Faction lock: +20% combat exp
@@ -60,3 +66,7 @@
 //      - Faction lock: charisma skill, charisma exp
 // - [x] Tetrads (Combat related)
 //      - Faction lock: +30% dex skill, +30% strength skill
+// - [x] The Covenant (Combat related)
+//      - Faction lock: +15% hacking skill, +75% combat skills
+// - [x] The Illuminati (Mixed bag) - From NSA or combat skills?
+//     - Faction lock: +75% hacking skill, +100% faster hack, +150% hack chance, +300% hack power
