@@ -1,6 +1,7 @@
 /**
  * Attempts to take ownership of the targeted server.
  *  @param {NS} ns
+ * @returns {boolean} true if the server was taken over
  **/
 export async function takeOwnership(ns, server) {
 	const homeServer = "home";
@@ -14,12 +15,24 @@ export async function takeOwnership(ns, server) {
 
 	function penetrate(server) {
 		ns.tprint("Penetrating " + server);
-		for (var file of Object.keys(cracks)) {
+		for (let file of Object.keys(cracks)) {
 			if (ns.fileExists(file, homeServer)) {
 				const runScript = cracks[file];
 				runScript(server);
 			}
 		}
+	}
+
+	function getNumCracks() {
+		return Object.keys(cracks).filter(function (file) {
+			return ns.fileExists(file, homeServer);
+		}).length;
+	}
+
+	function canHack(server) {
+		const numCracks = getNumCracks();
+		const reqPorts = ns.getServerNumPortsRequired(server);
+		return numCracks >= reqPorts;
 	}
 
 	async function gainAccess(server) {
@@ -35,11 +48,17 @@ export async function takeOwnership(ns, server) {
 		}
 	}
 
-	await gainAccess(server);
+	if (canHack(server)) {
+		await gainAccess(server);
+		return true;
+	} else {
+		ns.tprint(`Cannot hack ${server}, not enough cracks.`);
+		return false;
+	}
 }
 
 /** @param {NS} ns **/
 export async function main(ns) {
-	var server = ns.args[0];
+	const server = ns.args[0];
 	takeOwnership(ns, server);
 }
