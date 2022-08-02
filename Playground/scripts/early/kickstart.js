@@ -20,7 +20,18 @@ export async function main(ns) {
 	const hackScript = "/scripts/early/early-hack.js";
 	const pidHacks = ns.run(hackScript, 1);
 
+	// Execute early deploy (using same target as pserv)
+	const deployScript = "/scripts/early/deploy.js";
+	const pidDeploy = ns.run(deployScript, 1, pservTarget);
+
+	// If any PID is 0, something is wrong.
+	if (pidServers * pidHacknet * pidHacks * pidDeploy === 0) {
+		ns.tprint(
+			"One or more scripts failed to start (any with PID 0 failed). Please check your script arguments."
+		);
+	}
+
 	ns.tprint(
-		`${ns.getScriptName()} finished. Kickstarted the following process PIDs: ${pidServers}, ${pidHacknet}, ${pidHacks}`
+		`${ns.getScriptName()} finished. Kickstarted the following process (PID): ${serverPurchaseScript}(${pidServers}), ${hacknetPurchaseScript}(${pidHacknet}), ${hackScript}(${pidHacks}), ${deployScript}(${pidDeploy})`
 	);
 }
