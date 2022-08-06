@@ -1,17 +1,17 @@
 /** @param {NS} ns **/
 export async function main(ns) {
-	var target = ns.args[0];
-	var homeServer = "home";
-	var cracks = {
+	const target = ns.args[0];
+	const homeServer = "home";
+	const cracks = {
 		"BruteSSH.exe": ns.brutessh,
 		"FTPCrack.exe": ns.ftpcrack,
 		"relaySMTP.exe": ns.relaysmtp,
 		"HTTPWorm.exe": ns.httpworm,
-		"SQLInject.exe": ns.sqlinject
+		"SQLInject.exe": ns.sqlinject,
 	};
 
-	var payload = "/scripts/early/money-maker.js"
-	var payloadCost = ns.getScriptRam(payload);
+	const payload = "/scripts/early/money-maker.js";
+	const payloadCost = ns.getScriptRam(payload);
 
 	function getNumCracks() {
 		return Object.keys(cracks).filter(function (file) {
@@ -21,9 +21,9 @@ export async function main(ns) {
 
 	function penetrate(server) {
 		ns.print("Penetrating " + server);
-		for (var file of Object.keys(cracks)) {
+		for (let file of Object.keys(cracks)) {
 			if (ns.fileExists(file, homeServer)) {
-				var runScript = cracks[file];
+				const runScript = cracks[file];
 				runScript(server);
 			}
 		}
@@ -34,7 +34,7 @@ export async function main(ns) {
 		await ns.scp(payload, server);
 
 		if (!ns.hasRootAccess(server)) {
-			var requiredPorts = ns.getServerNumPortsRequired(server);
+			const requiredPorts = ns.getServerNumPortsRequired(server);
 			if (requiredPorts > 0) {
 				penetrate(server);
 			}
@@ -46,24 +46,24 @@ export async function main(ns) {
 			ns.scriptKill(payload, server);
 		}
 
-		var maxThreads = Math.floor(ns.getServerMaxRam(server) / payloadCost);
+		const maxThreads = Math.floor(ns.getServerMaxRam(server) / payloadCost);
 		ns.exec(payload, server, maxThreads, target);
 	}
 
 	// Retrieves all nodes in the network using DFS
 	function getNetworkNodes() {
 		ns.print("Retrieving all nodes in the network");
-		var visited = {};
-		var stack = [];
-		var origin = ns.getHostname();
+		let visited = {};
+		let stack = [];
+		const origin = ns.getHostname();
 		stack.push(origin);
 
 		while (stack.length > 0) {
-			var node = stack.pop();
+			const node = stack.pop();
 			if (!visited[node]) {
 				visited[node] = node;
-				var neighbours = ns.scan(node);
-				for (var i = 0; i < neighbours.length; i++) {
+				const neighbours = ns.scan(node);
+				for (let i = 0; i < neighbours.length; i++) {
 					var child = neighbours[i];
 					if (visited[child]) {
 						continue;
@@ -76,19 +76,21 @@ export async function main(ns) {
 	}
 
 	function canHack(server) {
-		var numCracks = getNumCracks();
-		var reqPorts = ns.getServerNumPortsRequired(server);
-		var ramAvail = ns.getServerMaxRam(server);
+		const numCracks = getNumCracks();
+		const reqPorts = ns.getServerNumPortsRequired(server);
+		const ramAvail = ns.getServerMaxRam(server);
 		return numCracks >= reqPorts && ramAvail > payloadCost;
 	}
 
 	function getTargetServers() {
-		var networkNodes = getNetworkNodes();
-		const targets = networkNodes.filter(function (node) { return canHack(node) && node != homeServer; });
+		const networkNodes = getNetworkNodes();
+		const targets = networkNodes.filter(function (node) {
+			return canHack(node) && node != homeServer;
+		});
 		// Add purchased servers
-		var i = 0;
-		var servPrefix = "pserv-";
-		while(ns.serverExists(servPrefix + i)) {
+		let i = 0;
+		const servPrefix = "pserv-";
+		while (ns.serverExists(servPrefix + i)) {
 			targets.push(servPrefix + i);
 			++i;
 		}
@@ -97,16 +99,16 @@ export async function main(ns) {
 
 	async function deployHacks(targets) {
 		ns.tprint("Deploying payload to these servers " + targets);
-		for (var serv of targets) {
+		for (let serv of targets) {
 			await copyAndDeliverPayload(serv);
 		}
 	}
 
-	var curTargets = [];
-	var waitTime = 2000;
+	let curTargets = [];
+	const waitTime = 2000;
 
-	while(true) {
-		var newTargets = getTargetServers();
+	while (true) {
+		const newTargets = getTargetServers();
 		if (newTargets.length !== curTargets.length) {
 			await deployHacks(newTargets);
 			curTargets = newTargets;

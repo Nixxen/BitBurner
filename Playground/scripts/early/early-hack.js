@@ -7,6 +7,7 @@ export async function main(ns) {
 	ns.disableLog("disableLog");
 	ns.disableLog("sleep");
 	ns.disableLog("getHackingLevel");
+	ns.disableLog("run");
 
 	const home = "home";
 	// Predefine early targets
@@ -78,7 +79,9 @@ export async function main(ns) {
 			ns.tprint(
 				`Player hacking level, ${ns.getHackingLevel()}, exceeds threshold for ${
 					target.server
-				}, ${target.threshold}. Attacking next server.`
+				}, ${target.threshold} + ${
+					target.threshold * thresholdHysteresis
+				}. Attacking next server.`
 			);
 			continue;
 		}
@@ -103,11 +106,16 @@ export async function main(ns) {
 			ns.tprint(`Could not run ${hackScript}. Aborting.`);
 			break;
 		}
+		ns.print(
+			`Attacking ${target.server} with threshold ${target.threshold} + ${
+				target.threshold * thresholdHysteresis
+			}. Current hack skill is ${ns.getHackingLevel()}.`
+		);
 		while (ns.isRunning(pid)) {
 			await ns.sleep(1000);
 		}
 
 		await ns.sleep(1000); // Just a safeguard to avoid locking up.
 	}
-	ns.tprint("Exhausted all servers in the kickstart script.");
+	ns.tprint("Exhausted all servers in the early-hack script.");
 }
