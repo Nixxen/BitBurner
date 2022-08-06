@@ -21,6 +21,10 @@
 //      - Prime algorithm on stored data
 //          - Fourier transforms? Need to look at different predictions
 //      - Make predictions on primed algorithm
+// - [ ] Fix purchase server script to be more optimal?
+//      - Currently will go through each level of server without skipping any level.
+//      - Good for starting out, but bad to starting it late. Though not much to save...
+// - [ ] Server interaction script from the terminal.
 
 // Completed factions:
 // - [x] CSEC (Hacking.)
