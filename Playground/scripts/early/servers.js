@@ -6,6 +6,23 @@
  * @argument {server} server to execute command on (if applicable)
  **/
 export async function main(ns) {
+	const shutdownServer = (server) => {
+		// Nuclear option. Kill all scripts.
+		if (ns.killall(server)) {
+			ns.tprint(
+				`Server ${server} had running scripts. They were successfully killed.`
+			);
+		}
+
+		const result = ns.deleteServer(server);
+		if (result) {
+			ns.tprint(`Deleted server ${server}`);
+		} else {
+			ns.tprint(`Failed to delete server ${server}`);
+		}
+		return;
+	};
+
 	const command = ns.args[0];
 	if (!command || command == "list") {
 		const servers = ns.getPurchasedServers();
@@ -29,21 +46,4 @@ export async function main(ns) {
 		ns.tprint("No target specified. Exiting.");
 		return;
 	}
-
-	const shutdownServer = (server) => {
-		// Nuclear option. Kill all scripts.
-		if (ns.killall(server)) {
-			ns.tprint(
-				`Server ${server} had running scripts. They were successfully killed.`
-			);
-		}
-
-		const result = ns.deleteServer(server);
-		if (result) {
-			ns.tprint(`Deleted server ${target}`);
-		} else {
-			ns.tprint(`Failed to delete server ${target}`);
-		}
-		return;
-	};
 }
