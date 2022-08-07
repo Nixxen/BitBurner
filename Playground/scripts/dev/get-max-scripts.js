@@ -33,6 +33,7 @@ export async function main(ns) {
 		ns.tprint(
 			`Max number of "${script}" to run on server "${server}" is ${maxScripts}`
 		);
+        return maxScripts;
 	} else {
 		ns.tprint(`Script "${script}" does not exist`);
 		const exist = ns.fileExists("utils.js");
