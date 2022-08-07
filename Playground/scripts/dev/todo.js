@@ -24,7 +24,8 @@
 // - [ ] Fix purchase server script to be more optimal?
 //      - Currently will go through each level of server without skipping any level.
 //      - Good for starting out, but bad to starting it late. Though not much to save...
-// - [ ] Server interaction script from the terminal.
+// - [x] Server interaction script from the terminal.
+// - [ ] Bail out script for extracting all assets on a new augment installation
 
 // Completed factions:
 // - [x] CSEC (Hacking.)
