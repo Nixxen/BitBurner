@@ -40,7 +40,7 @@ export async function main(ns) {
 			// 	`DEBUG - Selling ${stock.ticker}. Long: ${stock.long}, Short: ${stock.short}.`
 			// );
 			if (stock.long) {
-				const value = ns.stock.sell(stock.ticker, stock.long);
+				const value = ns.stock.sellStock(stock.ticker, stock.long);
 				if (value) {
 					sellValue += value;
 				} else {

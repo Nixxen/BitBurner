@@ -100,7 +100,7 @@ export async function main(ns) {
 				currentMinBuyPrice > minBuyCost
 			) {
 				changes = true;
-				ns.stock.buy(stock, shares);
+				ns.stock.buyStock(stock, shares);
 				await updateCommissionTotal();
 			}
 		}
@@ -126,7 +126,7 @@ export async function main(ns) {
 			changes = true;
 			let tempPosition = parseInt(position[0]);
 			let gains = parseInt(position[1]);
-			let sellPrice = ns.stock.sell(stock, position[0]);
+			let sellPrice = ns.stock.sellStock(stock, position[0]);
 			await updateCommissionTotal();
 			let profit = Math.floor((sellPrice - gains) * tempPosition);
 			let returns = Math.floor(sellPrice * tempPosition);
