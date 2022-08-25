@@ -42,7 +42,7 @@ export async function main(ns) {
 			if (stock.long) {
 				const value = ns.stock.sellStock(stock.ticker, stock.long);
 				if (value) {
-					sellValue += value;
+					sellValue += value * stock.long;
 				} else {
 					ns.tprint(
 						`Failed to sell long ${stock.ticker}. Try again or contact support.`
@@ -56,7 +56,7 @@ export async function main(ns) {
 				//  stocks though.
 				const value = ns.stock.sellShort(stock.ticker, stock.short);
 				if (value) {
-					sellValue += value;
+					sellValue += value * stock.short;
 				} else {
 					ns.tprint(
 						`Failed to sell short ${stock.ticker}. Try again or contact support.`
